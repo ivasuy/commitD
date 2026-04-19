@@ -1,0 +1,28 @@
+# Dependencies and build output
+node_modules
+.next
+out
+build
+dist
+coverage
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# VCS / editor / OS
+.git
+.gitignore
+.DS_Store
+.idea
+.vscode
+*.swp
+*.swo
+
+# Environment files - allow .env and .env.local for baked-in config
+.env*
+!.env
+!.env.local

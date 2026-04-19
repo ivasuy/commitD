@@ -1,0 +1,22 @@
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PORT: 3001
+    ports:
+      - "127.0.0.1:3001:3001"
+    environment:
+      - PORT=3001
+
+  landing:
+    build:
+      context: ./landing
+      dockerfile: Dockerfile
+      args:
+        PORT: 3000
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - PORT=3000
