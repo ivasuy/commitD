@@ -1,94 +1,131 @@
-# COMMITD
+# CommitD
 
-CommitD (formerly LockIn) is a two-app monorepo:
+**Weekly planning, habits, tasks, and finances — one system, one dashboard.**
 
-- Dashboard app (root): authenticated productivity workspace on `http://localhost:3001`
-- Landing app (`landing/`): marketing site on `http://localhost:3000`
+Your productivity tools are scattered across five apps. CommitD brings them into a single dark-themed workspace so you stop context-switching and start executing.
 
-## FEATURES
+---
 
-- Weekly planner (`/weekly-planner`)
-- Habit tracker (`/habit-tracker`)
-- Task tracker (`/task-tracker`)
-- Finance tracker (`/finance-tracker`)
-- Aggregated dashboard (`/dashboard`)
-- Firebase auth + Firestore persistence + Razorpay paywall
+## Demo
 
-## SETUP
+| Landing Page | Dashboard |
+|:---:|:---:|
+| <img src="docs/landing.gif" width="400" alt="CommitD landing page"/> | <img src="docs/dashboard.gif" width="400" alt="CommitD dashboard"/> |
+| Marketing site with animated shader hero | Authenticated workspace with live analytics |
 
-### 1) INSTALL DEPENDENCIES
+---
+
+## Features
+
+- **Weekly Planner** — drag-and-drop weekly schedule with time blocks and carry-forward for unfinished items
+- **Habit Tracker** — daily habit streaks with monthly heatmap visualization
+- **Task Tracker** — priorities (high/medium/low/optional), status tracking, and distribution analytics
+- **Finance Tracker** — income streams, recurring expenses, debts, and monthly transaction logging
+- **Aggregated Dashboard** — summary cards, weekly progress chart, and task analytics across all modules
+
+All data syncs to Firebase in real-time with debounced writes and flush-on-blur to prevent data loss.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 |
+| UI | shadcn/ui, Lucide icons |
+| Animation | Framer Motion, Paper Design Shaders |
+| Charts | Recharts |
+| Auth | Firebase Authentication (Email + Google) |
+| Database | Cloud Firestore |
+| Payments | Razorpay (weekly/monthly subscriptions + lifetime) |
+
+---
+
+## Architecture
+
+Two-app monorepo:
+
+```
+commitd/
+├── src/                    # Dashboard app (port 3001)
+│   ├── app/                # Pages, API routes, protected layout
+│   ├── components/         # Auth, paywall, shell, domain widgets
+│   ├── hooks/              # Custom React hooks
+│   └── lib/                # Firebase, Firestore, entitlement logic
+├── landing/                # Landing app (port 3000)
+│   └── src/                # Marketing site with shader hero
+├── docs/                   # Architecture and deployment docs
+└── mobile/                 # Mobile app (planned)
+```
+
+**Access control:** Protected routes are wrapped by `RequireAuth`, which checks profile entitlement. Expired access blurs content and shows a blocking paywall. New users get a 24-hour trial automatically on first protected page load.
+
+---
+
+## Quick Start
+
+### 1. Install dependencies
 
 ```bash
 npm install
 npm --prefix landing install
 ```
 
-### 2) CREATE ENV FILES
-
-Create root env file for dashboard app:
+### 2. Configure environment
 
 ```bash
 cp .env.example .env.local
 ```
 
-Optional landing env file:
+Fill in your Firebase and Razorpay credentials. See `.env.example` for all required variables.
+
+### 3. Start both apps
 
 ```bash
-cat > landing/.env.local <<'EOF'
-NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3001
-EOF
-```
-
-### 3) REQUIRED SERVICES
-
-- Firebase project with:
-  - Authentication (Email/Password and Google providers)
-  - Firestore database
-- Razorpay account with:
-  - `RAZORPAY_KEY_ID`
-  - `RAZORPAY_KEY_SECRET`
-  - `RAZORPAY_PLAN_ID_WEEKLY`
-  - `RAZORPAY_PLAN_ID_MONTHLY`
-
-### 4) START APPS
-
-Run each app in a separate terminal:
-
-```bash
-# terminal 1 (dashboard)
+# Terminal 1 — Dashboard
 npm run dev
 
-# terminal 2 (landing)
+# Terminal 2 — Landing
 npm run dev:landing
 ```
 
-### 5) OPEN URLS
+### 4. Open
 
-- Landing: `http://localhost:3000`
-- Dashboard: `http://localhost:3001`
+- Landing: http://localhost:3000
+- Dashboard: http://localhost:3001
 
-## SCRIPTS
+---
 
-### ROOT APP
+## Required Services
 
-- `npm run dev`
-- `npm run build`
-- `npm run start`
-- `npm run lint`
+**Firebase** — create a project with Authentication (Email/Password + Google providers) and Firestore database.
 
-### LANDING APP
+**Razorpay** — create an account and set up subscription plans for weekly and monthly billing. You'll need `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `RAZORPAY_PLAN_ID_WEEKLY`, and `RAZORPAY_PLAN_ID_MONTHLY`.
 
-- `npm run dev:landing`
-- `npm run build:landing`
-- `npm run start:landing`
+---
 
-Manual typecheck:
+## Scripts
 
-```bash
-npx tsc --noEmit
-```
+| Command | Description |
+|---|---|
+| `npm run dev` | Start dashboard on port 3001 |
+| `npm run dev:landing` | Start landing on port 3000 |
+| `npm run build` | Build dashboard for production |
+| `npm run build:landing` | Build landing for production |
+| `npm run lint` | Run ESLint |
+| `npx tsc --noEmit` | Type check without emitting |
 
-## DOCUMENTATION
+---
 
-- `docs/ARCHITECTURE.md`
-- `docs/DOCKER.md`
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md) — system design, data model, routing, and access control
+- [Docker](docs/DOCKER.md) — containerized deployment
+
+---
+
+## License
+
+MIT
