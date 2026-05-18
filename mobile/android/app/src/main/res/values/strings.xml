@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CommitD</string>
+    <string name="title_activity_main">CommitD</string>
+    <string name="package_name">com.commitd.app</string>
+    <string name="custom_url_scheme">com.commitd.app</string>
+</resources>

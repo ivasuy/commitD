@@ -41,4 +41,32 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-mobile
+
+# mobile app dependencies and generated outputs
+/mobile/node_modules/
+/mobile/.tmp/
+/mobile/dist/
+/mobile/build/
+
+# capacitor native build outputs
+/mobile/android/.gradle/
+/mobile/android/build/
+/mobile/android/app/build/
+/mobile/android/app/release/
+/mobile/android/capacitor-cordova-android-plugins/build/
+/mobile/android/**/.cxx/
+/mobile/android/**/outputs/
+/mobile/android/local.properties
+/mobile/android/*.jks
+/mobile/android/*.keystore
+
+/mobile/ios/build/
+/mobile/ios/DerivedData/
+/mobile/ios/App/Pods/
+/mobile/ios/App/CapApp-SPM/build/
+/mobile/ios/App/Podfile.lock
+/mobile/ios/App/*.xcworkspace/xcuserdata/
+/mobile/ios/App/*.xcodeproj/xcuserdata/
+/mobile/ios/App/*.xcodeproj/project.xcworkspace/xcuserdata/
+/mobile/ios/App/**/xcuserdata/
+/mobile/ios/App/**/*.xcuserstate

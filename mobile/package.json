@@ -1,0 +1,37 @@
+{
+  "name": "mobile",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "prepare:android-assets": "test ! -d android || mkdir -p android/app/src/main/assets",
+    "add:android": "capacitor add android && npm run assets:android",
+    "add:ios": "capacitor add ios && npm run assets:ios",
+    "assets": "npm run assets:ios && npm run assets:android",
+    "assets:generate": "capacitor-assets generate --iconBackgroundColor '#050505' --iconBackgroundColorDark '#050505' --splashBackgroundColor '#050505' --splashBackgroundColorDark '#050505'",
+    "assets:android": "npm run assets:generate -- --android",
+    "assets:ios": "npm run assets:generate -- --ios",
+    "assets:pwa": "npm run assets:generate -- --pwa",
+    "build:android": "npm run sync:android && cd android && ./gradlew assembleDebug",
+    "build:android:release": "npm run sync:android && capacitor build android",
+    "build:ios": "npm run sync:ios && xcodebuild -project ios/App/App.xcodeproj -target App -configuration Debug -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build",
+    "build:ios:release": "npm run sync:ios && capacitor build ios",
+    "sync": "npm run prepare:android-assets && capacitor sync && npm run assets",
+    "sync:android": "npm run prepare:android-assets && capacitor sync android && npm run assets:android",
+    "sync:ios": "capacitor sync ios && npm run assets:ios",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "@capacitor/ios": "^8.1.0",
+    "@capgo/capacitor-social-login": "^8.3.22"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

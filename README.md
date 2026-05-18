@@ -13,6 +13,14 @@ Your productivity tools are scattered across five apps. CommitD brings them into
 | <img src="docs/landing.gif" width="400" alt="CommitD landing page"/> | <img src="docs/dashboard.gif" width="400" alt="CommitD dashboard"/> |
 | Marketing site with animated shader hero | Authenticated workspace with live analytics |
 
+<h4 align="center">Mobile App</h3>
+
+<p align="center">
+  <img src="docs/mobile.gif" width="260" alt="CommitD mobile app showcase"/>
+</p>
+
+<p align="center">Capacitor build running on iOS with home screen launch flow.</p>
+
 ---
 
 ## Features
@@ -57,7 +65,7 @@ commitd/
 ├── landing/                # Landing app (port 3000)
 │   └── src/                # Marketing site with shader hero
 ├── docs/                   # Architecture and deployment docs
-└── mobile/                 # Mobile app (planned)
+└── mobile/                 # Capacitor mobile app
 ```
 
 **Access control:** Protected routes are wrapped by `RequireAuth`, which checks profile entitlement. Expired access blurs content and shows a blocking paywall. New users get a 24-hour trial automatically on first protected page load.
@@ -118,6 +126,101 @@ npm run dev:landing
 | `npx tsc --noEmit` | Type check without emitting |
 
 ---
+
+## Building Mobile App
+
+Capacitor commands should be run from the `mobile/` directory because `capacitor.config.ts`, `ios/`, and `android/` live there.
+
+```bash
+cd mobile
+```
+
+### Sync native projects
+
+Run sync after changing Capacitor config, plugins, web assets, or native assets.
+
+```bash
+npx cap sync android
+npx cap sync ios
+```
+
+The Android sync command copies Capacitor config into `android/app/src/main/assets`. The iOS sync command copies config into `ios/App/App`.
+
+### Open native IDEs
+
+```bash
+npx cap open android
+npx cap open ios
+```
+
+`npx cap open android` opens Android Studio. From there you can run the app on a connected device/emulator, or use the Gradle commands below from `mobile/android`.
+
+`npx cap open ios` opens Xcode. Select the `App` target, choose a simulator or connected device, then click the Build/Run button. For iOS builds, Xcode must have an iOS platform/simulator runtime installed. If Xcode reports `iOS <version> Platform Not Installed`, install it from Xcode Settings > Components or run `xcodebuild -downloadPlatform iOS`.
+
+### Android APK/AAB builds
+
+From `mobile/android`:
+
+```bash
+./gradlew assembleDebug
+```
+
+Debug APK output:
+
+```text
+mobile/android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+Install the debug APK on a connected Android device:
+
+```bash
+adb install app/build/outputs/apk/debug/app-debug.apk
+```
+
+If `adb` is not found, install Android platform tools or use Android Studio's device install flow.
+
+Create a release APK:
+
+```bash
+./gradlew assembleRelease
+```
+
+Release APK output:
+
+```text
+mobile/android/app/build/outputs/apk/release/app-release.apk
+```
+
+This may be unsigned unless Android signing is configured.
+
+Create the Play Store bundle:
+
+```bash
+./gradlew bundleRelease
+```
+
+AAB output:
+
+```text
+mobile/android/app/build/outputs/bundle/release/app-release.aab
+```
+
+The `.aab` file is for Play Store upload, not direct device install. Use the debug APK for quick local installs.
+
+### Existing mobile scripts
+
+The same common flows are available as npm scripts from the repo root:
+
+| Command | Description |
+|---|---|
+| `npm --prefix mobile run assets` | Regenerate native iOS and Android icon/splash assets from `mobile/assets/logo.svg` |
+| `npm --prefix mobile run sync` | Sync all existing native platforms and regenerate native mobile assets |
+| `npm --prefix mobile run sync:android` | Sync Android and regenerate Android assets |
+| `npm --prefix mobile run sync:ios` | Sync iOS and regenerate iOS assets |
+| `npm --prefix mobile run build:android` | Sync and build an unsigned Android debug APK |
+| `npm --prefix mobile run build:android:release` | Sync and build a signed Android release with Capacitor keystore options |
+| `npm --prefix mobile run build:ios` | Sync and build the iOS simulator/debug app without a connected device |
+| `npm --prefix mobile run build:ios:release` | Sync and archive an iOS release with Xcode signing configured |
 
 ## Documentation
 
